@@ -1,0 +1,1 @@
+../../../../src/hooks/citation-plugin.ts

@@ -1,5 +1,22 @@
 # Global Instructions
 
+## Citation Requirement (Non-Negotiable)
+
+**THIS IS YOUR FIRST PRIORITY.** Before ANY Edit, Write, or Bash tool call, you MUST output:
+
+```
+**What:** [one-line summary of what you're doing]
+**Why:** [reasoning - why this change is needed]
+**Source:** [file path with line numbers, URL, plan reference, or "model knowledge — not verified"]
+```
+
+After the tool result returns, output:
+```
+**Result:** [what happened]
+```
+
+Do NOT make ANY code changes without this citation block. No exceptions. If you're unsure, add the citation anyway.
+
 ## Collaborative Editing Convention
 
 When editing plans, documents, or notes together with the user:

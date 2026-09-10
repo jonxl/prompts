@@ -1,13 +1,19 @@
 import { readFileSync } from "fs"
 import { join } from "path"
 
-/**
- * Citation audit plugin for OpenCode.
- *
- * Mirrors the Claude Code hooks in src/hooks/hooks.json:
- * - Injects cited.md into context on session compaction
- * - Preserves citation rules across compaction boundaries
- */
+const CITATION_REMINDER = `
+
+## CITATION REMINDER
+Before EVERY Edit/Write/Bash tool call, you MUST output:
+- **What:** [one-line summary]
+- **Why:** [reasoning]
+- **Source:** [file path:line, URL, or "model knowledge — not verified"]
+
+After the tool result returns, output:
+- **Result:** [what happened]
+
+This is non-negotiable. No exceptions.`
+
 export const CitationAudit = async ({ directory }: { directory: string }) => {
   const citedPath = join(
     process.env.HOME || "~",
@@ -23,6 +29,12 @@ export const CitationAudit = async ({ directory }: { directory: string }) => {
   }
 
   return {
+    "session.created": async (output: { context: string[] }) => {
+      if (citedContent) {
+        output.context.push(citedContent)
+      }
+      output.context.push(CITATION_REMINDER)
+    },
     "experimental.session.compacting": async (
       input: unknown,
       output: { context: string[] },
@@ -30,6 +42,7 @@ export const CitationAudit = async ({ directory }: { directory: string }) => {
       if (citedContent) {
         output.context.push(citedContent)
       }
+      output.context.push(CITATION_REMINDER)
     },
   }
 }
